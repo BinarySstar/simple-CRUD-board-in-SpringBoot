@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Index Page</title>
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<div class="board_wrap">
+  <div class="board_title">
+    <strong>게시판</strong>
+    <p>이용자들이 작성한 다양한 Article을 만나보세요.</p>
+  </div>
+  <div class="board_list_wrap">
+    <div class="board_list">
+      <div class="top">
+        <div class="num">번호</div>
+        <div class="title">제목</div>
+        <div class="writer">글쓴이</div>
+        <div class="date">작성일</div>
+        <div class="count">조회</div>
+      </div>
+      <th:block th:each="article: ${articleList}">
+      <div>
+        <div class="num">
+          <span th:text="${article.id}"></span>
+        </div>
+        <div class="title">
+          <a th:href="@{/articles/{id}(id = ${article.id})}">
+            <span th:text="${article.title}"></span>
+          </a></div>
+        <div class="writer">
+          <span th:text="${article.writer}"></span>
+        </div>
+        <div class="date">
+          <span th:text="${#temporals.format(article.createdDate, 'yyyy-MM-dd')}"></span>
+        </div>
+        <div class="count">
+          <span th:text="${article.view}"></span>
+        </div>
+      </div>
+      </th:block>
+    </div>
+    <div class="bt_wrap">
+      <a href="/articles/write" class="on">등록</a>
+    </div>
+  </div>
+</body>
+</html>

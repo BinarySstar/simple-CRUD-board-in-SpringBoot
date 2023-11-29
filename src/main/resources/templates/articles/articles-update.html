@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>공지사항</title>
+    <link rel="stylesheet" th:href="@{/css/css.css}">
+</head>
+<body>
+<div class="board_wrap">
+    <div class="board_title">
+        <strong>게시글 수정</strong>
+    </div>
+    <form id="articleForm">
+        <div class="board_write_wrap">
+            <div class="board_write">
+                <div class="title">
+                    <dl>
+                        <dt>제목</dt>
+                        <dd><input type="text" name="title" id="title" th:value="${article.title}" required></dd>
+                    </dl>
+                </div>
+                <div class="info">
+                    <dl>
+                        <dt>글쓴이</dt>
+                        <dd><input type="text" name="writer" id="writer" th:value="${article.writer}" required></dd>
+                    </dl>
+                </div>
+                <div class="cont">
+                    <dd><textarea name="content" id="content" th:text="${article.content}" required></textarea></dd>
+                </div>
+            </div>
+            <div class="bt_wrap">
+                <button type="submit" class="on">수정</button>
+                <a href="/articles">취소</a>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('articleForm').addEventListener('submit', function (event) {
+        event.preventDefault();
+
+        const article = {
+            id: [[${articleId}]],
+            title: document.querySelector("#title").value,
+            writer: document.querySelector("#writer").value,
+            content: document.querySelector("#content").value,
+        };
+
+        let articleId = [[${articleId}]];
+        const url = `/api/articles/[[${articleId}]]`;
+        fetch(url, {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(article),
+        })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error("아티클 수정 실패!");
+                }
+            })
+            .then(data => {
+                alert("아티클 수정 완료");
+                window.location.href = `/articles/[[${articleId}]]`;
+            })
+            .catch(error => {
+                console.error("Error:", error);
+            });
+    });
+</script>
+</body>
+</html>
